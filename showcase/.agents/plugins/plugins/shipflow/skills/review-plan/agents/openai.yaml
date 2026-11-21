@@ -1,0 +1,7 @@
+interface:
+  display_name: "Review Plan"
+  short_description: "Run the Review Plan workflow"
+  default_prompt: "Use $review-plan to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

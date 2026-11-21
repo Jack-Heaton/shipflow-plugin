@@ -1,0 +1,7 @@
+interface:
+  display_name: "Plan Task"
+  short_description: "Run the Plan Task workflow"
+  default_prompt: "Use $plan-task to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

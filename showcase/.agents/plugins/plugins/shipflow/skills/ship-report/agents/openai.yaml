@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ship Report"
+  short_description: "Run the Ship Report workflow"
+  default_prompt: "Use $ship-report to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

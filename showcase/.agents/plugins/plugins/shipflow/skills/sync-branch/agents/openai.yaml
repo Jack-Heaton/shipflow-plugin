@@ -1,0 +1,7 @@
+interface:
+  display_name: "Sync Branch"
+  short_description: "Run the Sync Branch workflow"
+  default_prompt: "Use $sync-branch to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

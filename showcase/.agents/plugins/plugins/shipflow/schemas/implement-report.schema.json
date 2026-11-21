@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "shipflow/implement-report",
+  "title": "Implementer / fixer seat output (Codex backend)",
+  "description": "The final message of a Codex writer seat (implement batch or fix round). sf-codex renders it to implement-<batch>.md / fix-r<N>.md and VERIFIES the reported commits against the worktree (a reported sha not in --baseline..HEAD fails the seat). plan_gaps is the measure of how well-bounded the plan was: semantic gaps are decisions that changed behaviour or an interface. NOTE: OpenAI strict structured outputs require EVERY declared property to be listed in `required` \u2014 optional fields are expressed as nullable types, never by omission from `required` (first live run: the API rejected the schema and the implementer seat failed).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "commits",
+    "acceptance",
+    "plan_gaps",
+    "declined",
+    "scope_violations",
+    "blockers",
+    "verify_first"
+  ],
+  "properties": {
+    "commits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sha",
+          "subject",
+          "task_id"
+        ],
+        "properties": {
+          "sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{7,40}$"
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1
+          },
+          "task_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The task id from the tasks block, or null when the commit spans none (fix rounds)."
+          }
+        }
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "how"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "FAIL",
+              "DEFERRED",
+              "NOT_VERIFIED"
+            ]
+          },
+          "how": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The exact command or check, and its outcome \u2014 never 'verified'."
+          }
+        }
+      }
+    },
+    "plan_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "what",
+          "decision"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "cosmetic",
+              "semantic"
+            ]
+          },
+          "what": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the plan did not specify."
+          },
+          "decision": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What you did and why it is the simplest interpretation."
+          }
+        }
+      }
+    },
+    "declined": {
+      "type": "array",
+      "description": "Fix seats only: findings declined with evidence. Empty for implement batches.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "scope_violations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "verify_first": {
+      "type": "array",
+      "description": "Fix seats: one row per probe the FIX DIRECTION's verify_first lines asked for, run BEFORE editing. Empty for implement batches and for directions that asked for none.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "probe",
+          "outcome",
+          "contradicts_approach"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The finding id the probe belongs to."
+          },
+          "probe": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The exact command or check you ran."
+          },
+          "outcome": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What it showed \u2014 numbers and paths, never 'verified'."
+          },
+          "contradicts_approach": {
+            "type": "boolean",
+            "description": "true when the outcome invalidated the direction's approach; that finding is then reported under blockers, not improvised."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "shipflow/review-findings",
+  "title": "Code-review seat output (Codex backend)",
+  "description": "The final message of a Codex-backed code reviewer (round-1 panel, round-2+ cold re-review, cold regression pass). sf-codex renders it to the review-<role>-r<N>.md artifact and enforces the verdict rule (any CRITICAL/HIGH => FAIL).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verdict", "findings", "clean_areas", "deferred_to_domain", "probes_suggested"],
+  "properties": {
+    "verdict": { "type": "string", "enum": ["PASS", "FAIL"] },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id", "severity", "title", "file", "line_start", "line_end",
+          "what", "wrong", "impact", "recommendation", "recommendation_cite",
+          "live_code_verified", "confidence"
+        ],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "description": "Stable id within this review, e.g. SEC-1, PERF-2." },
+          "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+          "title": { "type": "string", "minLength": 1 },
+          "file": { "type": "string", "minLength": 1, "description": "Repo-relative path of the defect." },
+          "line_start": { "type": "integer", "minimum": 1 },
+          "line_end": { "type": "integer", "minimum": 1 },
+          "what": { "type": "string", "minLength": 1, "description": "What the code does." },
+          "wrong": { "type": "string", "minLength": 1, "description": "What is wrong with it." },
+          "impact": { "type": "string", "minLength": 1 },
+          "recommendation": { "type": "string", "description": "Concrete change. Empty when no live code can be cited for a fix — then the problem is stated without a prescription." },
+          "recommendation_cite": {
+            "description": "The live file:line the recommendation applies to, or null when no live code can be cited.",
+            "anyOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["file", "line"],
+                "properties": {
+                  "file": { "type": "string", "minLength": 1 },
+                  "line": { "type": "integer", "minimum": 1 }
+                }
+              }
+            ]
+          },
+          "live_code_verified": { "type": "boolean", "description": "True only if the reviewer opened the cited code and confirmed it is reached (not commented out, flagged off, or DISABLED)." },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "clean_areas": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "One short line per area checked and found clean." },
+    "deferred_to_domain": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "One line each: a finding that belongs to another reviewer on the panel, naming that domain." },
+    "probes_suggested": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Mutation probes the reviewer would have run (exact edit + expected outcome). Never executed by the reviewer." }
+  }
+}

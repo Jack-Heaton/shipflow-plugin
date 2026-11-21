@@ -1,0 +1,44 @@
+{
+  "$comment": "Per-seat model/effort tiers for Codex seats (review, implementer, fixer, mop-up) (skills/shared/review-backend.md §Seat tiers). Every seat runs one model, gpt-6.1-sol, so a tier differs only in effort; every tier pins service_tier default so no seat pays the priority rate. Explore has no Codex seat — it is the host's built-in Claude agent. Resolution: --model/--effort > --tier > templates[template] > seats[seat] > seats['*']. A null model/effort inherits the run home's config.toml (the user's Codex defaults). Warm continuations (--resume) never re-tier: the thread keeps the model it was opened with. Override the whole table for an experiment with SF_CODEX_TIERS=<path>.",
+  "tiers": {
+    "frontier": {
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "service_tier": "default",
+      "note": "the gates of record: the plan reviewer, the plan-stage and code-stage failure-over-time seats, the routed domain reviewer for the touched workspace, and the seats['*'] default"
+    },
+    "standard": {
+      "model": "gpt-6.1-sol",
+      "effort": "high",
+      "service_tier": "default",
+      "note": "structural and performance reads (architecture, performance), where more reasoning per file pays"
+    },
+    "standard-light": {
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "service_tier": "default",
+      "note": "enumeration and fix-commit-only reads (test-coverage-guardian, the regression template)"
+    },
+    "writer": {
+      "model": "gpt-6.1-sol",
+      "effort": "low",
+      "service_tier": "default",
+      "note": "the writer seats — implementer, fixer, mop-up: bounded by the plan or the findings, and every commit is gated by review, the build and the acceptance checks"
+    }
+  },
+  "templates": {
+    "regression": "standard-light"
+  },
+  "seats": {
+    "plan-reviewer": "frontier",
+    "plan-failure-over-time": "frontier",
+    "architecture": "standard",
+    "performance": "standard",
+    "failure-over-time": "frontier",
+    "test-coverage-guardian": "standard-light",
+    "implementer": "writer",
+    "fixer": "writer",
+    "mopup-fixer": "writer",
+    "*": "frontier"
+  }
+}

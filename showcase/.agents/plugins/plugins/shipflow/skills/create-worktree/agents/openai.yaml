@@ -1,0 +1,7 @@
+interface:
+  display_name: "Create Worktree"
+  short_description: "Run the Create Worktree workflow"
+  default_prompt: "Use $create-worktree to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

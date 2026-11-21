@@ -1,0 +1,7 @@
+interface:
+  display_name: "Review Task Code"
+  short_description: "Run the Review Task Code workflow"
+  default_prompt: "Use $review-task-code to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

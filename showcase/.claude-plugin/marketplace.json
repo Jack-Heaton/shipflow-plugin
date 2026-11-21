@@ -1,0 +1,17 @@
+{
+  "name": "shipflow",
+  "owner": {
+    "name": "Jack Heaton"
+  },
+  "metadata": {
+    "description": "An autonomous issue-to-PR shipping pipeline for Claude Code and Codex."
+  },
+  "plugins": [
+    {
+      "name": "shipflow",
+      "source": "./plugins/shipflow",
+      "description": "ship-task: take a tracked issue from reproduction through an adversarially reviewed plan, routed multi-reviewer code review, build/test/acceptance gates, and a mergeable PR.",
+      "category": "development"
+    }
+  ]
+}

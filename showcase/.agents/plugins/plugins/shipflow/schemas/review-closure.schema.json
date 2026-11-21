@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "shipflow/review-closure",
+  "title": "Warm closure / clarification output (Codex backend)",
+  "description": "The final message of a resumed Codex reviewer thread verifying its own findings after a fix round (closure), or answering one pre-fix clarification question (clarify). sf-codex renders it to review-<role>-r<N>-closure.md; every id from the findings table must be verdicted, a missing id renders REOPENED.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["closures", "new_fix_introduced", "answer"],
+  "properties": {
+    "closures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "verdict", "file", "line", "reason"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "verdict": { "type": "string", "enum": ["CLOSED", "REOPENED", "DECLINE-ACCEPTED", "NOT-MINE"] },
+          "file": { "type": "string", "description": "Evidence location (repo-relative). Empty string only for NOT-MINE." },
+          "line": { "type": "integer", "minimum": 0, "description": "Evidence line; 0 only for NOT-MINE." },
+          "reason": { "type": "string", "minLength": 1, "description": "One sentence." }
+        }
+      }
+    },
+    "new_fix_introduced": {
+      "type": "array",
+      "description": "CRITICAL or HIGH defects in the fix commits themselves (the only new findings a closure may raise). Same shape as a review finding.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "severity", "title", "file", "line_start", "line_end", "what", "wrong", "impact", "recommendation", "recommendation_cite", "live_code_verified", "confidence"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "severity": { "type": "string", "enum": ["CRITICAL", "HIGH"] },
+          "title": { "type": "string", "minLength": 1 },
+          "file": { "type": "string", "minLength": 1 },
+          "line_start": { "type": "integer", "minimum": 1 },
+          "line_end": { "type": "integer", "minimum": 1 },
+          "what": { "type": "string", "minLength": 1 },
+          "wrong": { "type": "string", "minLength": 1 },
+          "impact": { "type": "string", "minLength": 1 },
+          "recommendation": { "type": "string" },
+          "recommendation_cite": {
+            "anyOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["file", "line"],
+                "properties": {
+                  "file": { "type": "string", "minLength": 1 },
+                  "line": { "type": "integer", "minimum": 1 }
+                }
+              }
+            ]
+          },
+          "live_code_verified": { "type": "boolean" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "answer": { "type": "string", "description": "Clarify template only: the one-paragraph answer. Empty string for closure exchanges." }
+  }
+}

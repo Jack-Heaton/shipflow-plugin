@@ -1,0 +1,7 @@
+interface:
+  display_name: "Implement Task"
+  short_description: "Run the Implement Task workflow"
+  default_prompt: "Use $implement-task to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

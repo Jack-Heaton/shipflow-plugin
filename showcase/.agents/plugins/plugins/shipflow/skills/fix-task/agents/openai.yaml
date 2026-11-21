@@ -1,0 +1,7 @@
+interface:
+  display_name: "Fix Task"
+  short_description: "Run the Fix Task workflow"
+  default_prompt: "Use $fix-task to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

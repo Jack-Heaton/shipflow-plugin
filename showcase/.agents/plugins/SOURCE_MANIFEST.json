@@ -1,0 +1,70 @@
+{
+  "skills": [
+    {
+      "name": "create-worktree",
+      "source": "plugins/shipflow/skills/create-worktree/SKILL.md",
+      "sha256": "391a1f0e186773b0af96a221391165c1989b3359a28612c552f4186b78179036",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "cut-task",
+      "source": "plugins/shipflow/skills/cut-task/SKILL.md",
+      "sha256": "af9e8943e70be2e98ae952fad48afb0def3ced7606f24429796b533bbfadecc4",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "fix-task",
+      "source": "plugins/shipflow/skills/fix-task/SKILL.md",
+      "sha256": "6310016f758f22e353922a179f5f680a1213059d5a65476b91b604b441f32c35",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "implement-task",
+      "source": "plugins/shipflow/skills/implement-task/SKILL.md",
+      "sha256": "12362034c789b7f4d09fba60a64e6b04f0022ea04ef425cf71f9bfaa31d38841",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "plan-task",
+      "source": "plugins/shipflow/skills/plan-task/SKILL.md",
+      "sha256": "047b9e2e65fdd03069de1d1a79f1c5de5b457c74295f2c4e4a7eeeca87b6bb40",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "review-plan",
+      "source": "plugins/shipflow/skills/review-plan/SKILL.md",
+      "sha256": "998f9c49e11603f108aeb35adb502f48d69fc2837dadbd253bc126504ac03b6d",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "review-task-code",
+      "source": "plugins/shipflow/skills/review-task-code/SKILL.md",
+      "sha256": "e4accfd291d305d42642620c0ea431da8b446a42a429fceaccbec1015ae55f1f",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "review-task-plan",
+      "source": "plugins/shipflow/skills/review-task-plan/SKILL.md",
+      "sha256": "6de1c890c575b5eb6f064952d38530fb3b032e62c7bc07c2976420eba37c74e9",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "ship-report",
+      "source": "plugins/shipflow/skills/ship-report/SKILL.md",
+      "sha256": "8bb828def67df70cf8e035426638fb6edb43874e9aaf2fb7bb11eb475d7435c9",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "ship-task",
+      "source": "plugins/shipflow/skills/ship-task/SKILL.md",
+      "sha256": "ffa64c31f0e11e131f7eb3b1880344030ceac7f2f3a903265319fdcdb096b3f4",
+      "claude_model": "inherit"
+    },
+    {
+      "name": "sync-branch",
+      "source": "plugins/shipflow/skills/sync-branch/SKILL.md",
+      "sha256": "aafa875e1097a79b34a174202cb50684a669b2399e895b667bf37c7ae33c4ca3",
+      "claude_model": "inherit"
+    }
+  ]
+}

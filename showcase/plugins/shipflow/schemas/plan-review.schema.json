@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "shipflow/plan-review",
+  "title": "Plan-review seat output (Codex backend)",
+  "description": "The final message of a Codex-backed plan reviewer (round 1 full pass, rounds >=2 targeted re-review via resume). sf-codex renders it to plan-review-r<N>.md in the exact review-plan/SKILL.md Step 4 layout and enforces overall_risk = max severity and the rubric's verdict rule.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["overall_risk", "verdict", "findings", "clean_dimensions", "open_questions"],
+  "properties": {
+    "overall_risk": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "NONE"], "description": "Highest finding severity; NONE when there are no findings." },
+    "verdict": { "type": "string", "enum": ["Proceed as-is", "Proceed with modifications", "Stop and redesign"] },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "severity", "dimension", "title", "plan_says", "problem", "impact", "evidence", "recommendation", "unverified"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1, "description": "Stable id within this review, e.g. P-1. Keep ids stable across rounds." },
+          "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+          "dimension": { "type": "string", "pattern": "^3\\.(1[01]|[1-9])$", "description": "The review-plan dimension, 3.1 through 3.11." },
+          "title": { "type": "string", "minLength": 1 },
+          "plan_says": { "type": "string", "minLength": 1, "description": "What the plan proposes (quote or paraphrase)." },
+          "problem": { "type": "string", "minLength": 1 },
+          "impact": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "string", "minLength": 1, "description": "Specific file paths, code references, or codebase patterns." },
+          "recommendation": { "type": "string", "minLength": 1, "description": "Concrete action; when the remedy cannot cite live code, the most plausible remedy plus the exact check that would settle it." },
+          "unverified": { "type": "boolean", "description": "True when the recommendation could not be verified against live code or vendor evidence (the UNVERIFIED marker)." }
+        }
+      }
+    },
+    "clean_dimensions": { "type": "array", "items": { "type": "string", "pattern": "^3\\.(1[01]|[1-9])( .*)?$" }, "description": "Dimensions with no findings, e.g. \"3.4 — Security Implications\"." },
+    "open_questions": { "type": "array", "items": { "type": "string", "minLength": 1 }, "description": "Questions the plan does not answer that must be resolved before implementation. Empty when none." }
+  }
+}

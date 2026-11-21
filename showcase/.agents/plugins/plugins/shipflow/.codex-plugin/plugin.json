@@ -1,0 +1,18 @@
+{
+  "name": "shipflow",
+  "version": "1.0.0",
+  "description": "Autonomous issue-to-PR pipeline. /ship-task picks up (or cuts) a GitHub issue, reproduces it, routes it by blast area (express, full, or epic), drafts and adversarially reviews a plan, implements with routed multi-reviewer panels and fix rounds, runs build/lint/test/acceptance gates, and opens a mergeable PR. Runs on Claude Code, on Codex, or hybrid (Claude orchestrating GPT seats). Tracker state lives behind one adapter (scripts/tracker.mjs) so it can be pointed at any PM platform.",
+  "author": {
+    "name": "Jack Heaton"
+  },
+  "keywords": [
+    "workflow",
+    "agents",
+    "code-review",
+    "github",
+    "issues",
+    "planning",
+    "codex",
+    "multi-agent"
+  ]
+}

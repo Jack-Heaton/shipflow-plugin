@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ship Task"
+  short_description: "Run the Ship Task workflow"
+  default_prompt: "Use $ship-task to run this workflow."
+
+policy:
+  allow_implicit_invocation: false

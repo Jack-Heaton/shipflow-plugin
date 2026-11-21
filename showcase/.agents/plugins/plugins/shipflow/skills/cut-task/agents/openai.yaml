@@ -1,0 +1,7 @@
+interface:
+  display_name: "Cut Task"
+  short_description: "Run the Cut Task workflow"
+  default_prompt: "Use $cut-task to run this workflow."
+
+policy:
+  allow_implicit_invocation: false
