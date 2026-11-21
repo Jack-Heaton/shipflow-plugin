@@ -21,7 +21,7 @@
     {
       "name": "implement-task",
       "source": "plugins/shipflow/skills/implement-task/SKILL.md",
-      "sha256": "12362034c789b7f4d09fba60a64e6b04f0022ea04ef425cf71f9bfaa31d38841",
+      "sha256": "b61294d2b91afda84c9db50dd87e5231e7516769a2879de518814f5bf9a97b9b",
       "claude_model": "inherit"
     },
     {
@@ -57,7 +57,7 @@
     {
       "name": "ship-task",
       "source": "plugins/shipflow/skills/ship-task/SKILL.md",
-      "sha256": "ffa64c31f0e11e131f7eb3b1880344030ceac7f2f3a903265319fdcdb096b3f4",
+      "sha256": "aef7d5e67acbdde28fcb73401e1ed87c461ebf8b1d3232d7822ddf3738853da4",
       "claude_model": "inherit"
     },
     {

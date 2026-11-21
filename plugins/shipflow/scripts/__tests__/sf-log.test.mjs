@@ -123,7 +123,7 @@ test('a sub-second Claude spawn wall is warned about and flagged by check; codex
   const late = sflog(log, ['spawn', 'role=fixer', 'agent_type=shipflow:sf-fixer', 'model=opus', 'phase=fix', `started=${Date.now()}`]);
   assert.equal(late.status, 0, 'logged as-is — the ledger is the evidence');
   assert.match(late.stderr, /started= must be captured BEFORE the spawn/);
-  const codex = sflog(log, ['spawn', 'role=reviewer:performance', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'tier=standard', 'phase=review', 'backend=codex', 'wall_ms=12']);
+  const codex = sflog(log, ['spawn', 'role=reviewer:performance', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'tier=standard', 'phase=review', 'backend=codex', 'wall_ms=12']);
   assert.equal(codex.status, 0, codex.stderr);
   assert.doesNotMatch(codex.stderr, /captured BEFORE/);
   const ok = sflog(log, ['spawn', 'role=implementer', 'agent_type=shipflow:sf-implementer', 'model=opus', 'phase=implement', `started=${Date.now() - 90000}`]);
@@ -155,7 +155,7 @@ test('a wall over 48 h is warned about and flagged by check on any backend (star
   const res = sflog(log, ['stage', 'closure-exchange', 'role=reviewer:security:closure', 'round=7', 'path=warm', `wall_ms=${huge}`]);
   assert.equal(res.status, 0, res.stderr);
   assert.match(res.stderr, /exceeds 48 h/);
-  const codex = sflog(log, ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'phase=fix', 'backend=codex', `wall_ms=${huge}`]);
+  const codex = sflog(log, ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'phase=fix', 'backend=codex', `wall_ms=${huge}`]);
   assert.equal(codex.status, 0, codex.stderr);
   assert.match(codex.stderr, /exceeds 48 h/, 'the upper bound applies to codex rows too');
   const check = sflog(log, ['check', log]);
@@ -213,7 +213,7 @@ test('0.27.0: integration-sync accepts every sync point in shared/integration-sy
 
 test('0.28.0: a second spawn with the same agent_id + artifact is a duplicate — warned, not written, exit 0; check lists it', () => {
   const { log } = fixture();
-  const seat = ['spawn', 'role=implementer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'phase=implement',
+  const seat = ['spawn', 'role=implementer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'phase=implement',
     'agent_id=01a07c53-9acc', 'artifact=/x/implement-phase-8.md', 'wall_ms=398399', 'tokens_out=23218'];
   const first = sflog(log, seat);
   assert.equal(first.status, 0, first.stderr);
@@ -252,7 +252,7 @@ test('0.31.0: check flags a gated fixer that ran on a direction with no directio
   assert.equal(rev.status, 0, rev.stderr);
   assert.doesNotMatch(rev.stderr, /does not start with a known prefix/);
 
-  const codexFixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
+  const codexFixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
   assert.equal(sflog(log, codexFixer(['round=1', 'direction=true', 'merged_items=1'])).status, 0, 'round 1 has the reviewer above → covered');
   assert.equal(sflog(log, codexFixer(['round=2', 'direction=true', 'merged_items=2'])).status, 0, 'round 2 has no reviewer → listed');
   assert.equal(sflog(log, codexFixer(['round=3', 'direction=false'])).status, 0, 'ungated → not listed');
@@ -307,7 +307,7 @@ test('0.31.0: adjudication stage requires its counts, and check flags a closure 
   // Build a ledger exercising every check path on a fresh log.
   const fresh = fixture();
   const t0 = Date.now() - 60000;
-  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
+  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
   const closure = (extra) => ['stage', 'closure-exchange', 'role=reviewer:security', 'wall_ms=60000', ...extra];
   const coldReviewer = (extra) => ['spawn', 'role=reviewer:security', 'agent_type=security-reviewer', 'model=opus', 'phase=review', `started=${t0}`, ...extra];
 
@@ -362,7 +362,7 @@ test('0.31.0: adjudication stage requires its counts, and check flags a closure 
 
 test('0.31.0: plan_gaps_semantic is validated at write, accumulates across fixer spawns, and gates as unknown when absent', () => {
   const { log } = fixture();
-  const fixerArgs = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
+  const fixerArgs = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
   // Write-side field invariant (mirrors merged_items): a malformed count is refused, no row written.
   assert.equal(sflog(log, fixerArgs(['round=1', 'plan_gaps_semantic=abc'])).status, 2, 'plan_gaps_semantic=abc refused at write');
   assert.equal(sflog(log, fixerArgs(['round=1', 'plan_gaps_cosmetic=abc'])).status, 2, 'plan_gaps_cosmetic=abc refused at write');
@@ -430,7 +430,7 @@ test('0.31.0: oscillation-stop validates severity/action, and check flags re-ent
   assert.equal(sflog(log, ['stage', 'oscillation-stop', 'finding=U3', 'round=2', 'severity=HIGH', 'action=retry']).status, 2, 'retry is not an action');
   assert.equal(sflog(log, ['stage', 'oscillation-stop', 'finding=U3', 'round=2', 'severity=HIGH', 'action=design-note']).status, 0, 'action is optional but checked');
 
-  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
+  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
   const stop = (extra) => ['stage', 'oscillation-stop', ...extra];
   const closure = (extra) => ['stage', 'closure-exchange', 'role=reviewer:security', 'wall_ms=60000', ...extra];
 
@@ -494,7 +494,7 @@ test('0.31.0: oscillation-stop validates severity/action, and check flags re-ent
 
 test('0.31.0: oscillation disposition — checkpoint/bucket-3 second stops are not repeats; fixer reason follows the latest disposition', () => {
   const { log } = fixture();
-  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
+  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
   const stop = (extra) => ['stage', 'oscillation-stop', ...extra];
 
   // U1: design-note stop (with note) → checkpoint second stop is the §3 terminal move, not a repeat.
@@ -524,7 +524,7 @@ test('0.31.0: oscillation disposition — checkpoint/bucket-3 second stops are n
 });
 
 test('0.31.0: oscillation collisions, linear ordering, and the one sanctioned re-entry', () => {
-  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
+  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
   const stop = (extra) => ['stage', 'oscillation-stop', ...extra];
 
   // Collision: a stop in epic_phase A and one in B for the same id are two first stops (no repeat);
@@ -560,7 +560,7 @@ test('0.31.0: oscillation collisions, linear ordering, and the one sanctioned re
 
 test('0.31.0: findings/reopened_ids/round/design_note write invariants and read-side malformed_fields', () => {
   const { log } = fixture();
-  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.1-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
+  const fixer = (extra) => ['spawn', 'role=fixer', 'agent_type=codex-exec', 'model=gpt-6.2-sol', 'backend=codex', 'phase=fix', 'wall_ms=60000', ...extra];
   const stop = (extra) => ['stage', 'oscillation-stop', ...extra];
   const closure = (extra) => ['stage', 'closure-exchange', 'role=reviewer:security', 'wall_ms=60000', ...extra];
 
@@ -1049,7 +1049,7 @@ test('spawn records model_served and effort_served from the agent transcript; ch
   assert.equal(traversal.status, 0, traversal.stderr);
   assert.equal(lastEvent(log).model_served, undefined, 'an id that is not a plain token is never resolved to a path');
 
-  const codex = pklogWithProjects(log, projects, [...base, 'role=plan-reviewer', 'agent_type=codex-exec', 'backend=codex', 'model=gpt-6.1-sol', 'agent_id=a1b2c3', 'artifact=/d']);
+  const codex = pklogWithProjects(log, projects, [...base, 'role=plan-reviewer', 'agent_type=codex-exec', 'backend=codex', 'model=gpt-6.2-sol', 'agent_id=a1b2c3', 'artifact=/d']);
   assert.equal(codex.status, 0, codex.stderr);
   assert.equal(lastEvent(log).model_served, undefined, 'a Codex seat has no Claude transcript');
 

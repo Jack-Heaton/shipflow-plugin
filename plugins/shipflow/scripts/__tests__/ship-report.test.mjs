@@ -36,7 +36,7 @@ test('round extensions, follow-ups, goal-post counts and absurd walls render and
     { stage: 'run-meta', skill: 'ship-task' },
     { stage: 'spawn', role: 'reviewer:security', agent_type: 'security-reviewer', model: 'opus', phase: 'review', round: 1, wall_ms: 600000 },
     { stage: 'closure-exchange', role: 'reviewer:security:closure', round: 1, path: 'warm', wall_ms: 496753 * 3600 * 1000 },
-    { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'fix', round: 1, tokens: 1000, duration_ms: 50 * 3600 * 1000 },
+    { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'fix', round: 1, tokens: 1000, duration_ms: 50 * 3600 * 1000 },
     { stage: 'triage', round: 1, rereview_mode: 'warm', bucket1_fix_now: 3, bucket2_human: 0, bucket3_followup: 2, bucket4_dropped: 0, goal_post: 1 },
     { stage: 'followup-bundle', bundle: 'bnd001', list: '901', round: 1 },
     { stage: 'followup-tasks', created: ['t1', 't2'], bundle: 'bnd001', round: 1 },
@@ -118,11 +118,11 @@ test('0.26.0: idle after a finished seat, fix rounds derived from fixer spawns, 
   const events = [
     { stage: 'run-meta', skill: 'ship-task', ts: at(0, 0) },
     { stage: 'integration-sync', at: '3d', behind: 205, conflicts: 0, ts: at(0, 5) },
-    { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'fix', round: 1, tokens: 1000, wall_ms: 600000, ts: at(1, 0) },
+    { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'fix', round: 1, tokens: 1000, wall_ms: 600000, ts: at(1, 0) },
     { stage: 'triage', round: 1, rereview_mode: 'warm', bucket1_fix_now: 3, bucket2_human: 0, bucket3_followup: 0, bucket4_dropped: 0, ts: at(1, 2) },
-    { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'fix', round: 2, tokens: 1000, wall_ms: 600000, ts: at(2, 0) },
+    { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'fix', round: 2, tokens: 1000, wall_ms: 600000, ts: at(2, 0) },
     { stage: 'build-gate', result: 'pass', ts: at(6, 0) },   // 4 h after the round-2 fixer returned: asleep on a nohup'd seat
-    { stage: 'spawn', role: 'mopup-fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'fix', round: 3, tokens: 100, wall_ms: 60000, ts: at(6, 10) },
+    { stage: 'spawn', role: 'mopup-fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'fix', round: 3, tokens: 100, wall_ms: 60000, ts: at(6, 10) },
     { stage: 'integration-sync', at: '3g', behind: 12, conflicts: 0, ts: at(6, 20) },
     { stage: 'postmortem', pr: 1, ts: at(6, 30) },
   ];
@@ -179,11 +179,11 @@ test('0.28.0: wall segments (seat busy / operator wait / session gap / orchestra
   const at = (min, e) => JSON.stringify({ task: 'unit', ts: new Date(Date.UTC(2026, 8, 7, 0, min)).toISOString(), ...e });
   writeFileSync(f, [
     at(0, { stage: 'run-meta', skill: 'ship-task' }),
-    at(30, { stage: 'spawn', role: 'explore', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'plan', round: 1, tokens: 500, wall_ms: 20 * 60000, agent_id: 'x1', artifact: '/a/explore.md' }),
+    at(30, { stage: 'spawn', role: 'explore', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'plan', round: 1, tokens: 500, wall_ms: 20 * 60000, agent_id: 'x1', artifact: '/a/explore.md' }),
     at(40, { stage: '2', event: 'checkpoint', reason: 'plan-needs-operator' }),
     at(100, { stage: 'resume-adopted', prior_log: 'ship-task-1700000000.jsonl' }),
-    at(110, { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'fix', round: 1, tokens: 9000, wall_ms: 5 * 60000, agent_id: 'f1', artifact: '/a/fix-r1.md' }),
-    at(111, { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'fix', round: 1, wall_ms: 5 * 60000, agent_id: 'f1', artifact: '/a/fix-r1.md', epic_phase: 2 }),
+    at(110, { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'fix', round: 1, tokens: 9000, wall_ms: 5 * 60000, agent_id: 'f1', artifact: '/a/fix-r1.md' }),
+    at(111, { stage: 'spawn', role: 'fixer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'fix', round: 1, wall_ms: 5 * 60000, agent_id: 'f1', artifact: '/a/fix-r1.md', epic_phase: 2 }),
     at(150, { stage: 'session-resumed', source: 'resume', session_id: 's2' }),
     at(160, { stage: 'triage', round: 1, rereview_mode: 'warm', bucket1_fix_now: 1, bucket2_human: 0, bucket3_followup: 0, bucket4_dropped: 0 }),
   ].join('\n') + '\n');
@@ -274,7 +274,7 @@ test('0.28.0: a run with no marks attributes every non-seat minute to orchestrat
 test('0.29.0: a codex-seat-failed note with recovered usage is a cost-bearing turn; one without tokens is flagged as a lower bound', () => {
   const out = report(ledger([
     { stage: 'run-meta', skill: 'ship-task' },
-    { stage: 'spawn', role: 'implementer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.1-sol', phase: 'implement', round: 1, tokens: 1000, wall_ms: 60000, agent_id: 'i1', artifact: '/a/i1.md' },
+    { stage: 'spawn', role: 'implementer', agent_type: 'codex-exec', backend: 'codex', model: 'gpt-6.2-sol', phase: 'implement', round: 1, tokens: 1000, wall_ms: 60000, agent_id: 'i1', artifact: '/a/i1.md' },
     { stage: 'note', event: 'codex-seat-failed', role: 'implementer', backend: 'codex', round: 1, detail: 'timed out after 40 min', agent_id: 'i2', tokens: 34906570, tokens_in: 34796312, tokens_cached: 34167296, tokens_out: 110258, usage_source: 'rollout', wall_ms: 2400000, commands_run: 156, commands_ok: 129 },
     { stage: 'note', event: 'codex-seat-fallback', role: 'implementer', detail: 'adopt-dirty' },
   ]));

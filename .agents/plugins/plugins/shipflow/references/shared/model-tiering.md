@@ -7,14 +7,14 @@ Model family and execution host are separate choices: a Claude orchestrator may
 dispatch GPT workers in hybrid mode; a Codex orchestrator uses GPT workers without
 requiring Claude. Never translate a Claude model alias into a GPT effort level.
 
-> **Revision 11 — 2026-09-30 (every Codex seat on `gpt-6.1-sol`; Explore stays Claude):** every
-> tier in `scripts/review-tiers.json` runs `gpt-6.1-sol` on the `default` service tier; Terra and
+> **Revision 11 — 2026-09-30 (every Codex seat on `gpt-6.2-sol`; Explore stays Claude):** every
+> tier in `scripts/review-tiers.json` runs `gpt-6.2-sol` on the `default` service tier; Terra and
 > Luna are retired from the table and no seat runs `priority`. Reviewer efforts hold (`frontier`
 > medium, `standard` high, `standard-light` medium). The writer seats — implementer, fixer and
 > mop-up — move from Luna / max to Sol / low under the tier renamed `fast-max` → `writer`. The
 > Codex Explore seat (`fast` tier, `sf-codex explore`) is removed: Explore runs as the host's
 > built-in agent in every `HYBRID_MODE`, so `HYBRID_MODE=codex` now moves review, implementer,
-> fixer and mop-up seats only. The `home init` fallback default follows to `gpt-6.1-sol`.
+> fixer and mop-up seats only. The `home init` fallback default follows to `gpt-6.2-sol`.
 > Operator decision; the writer-effort watch is under §Evidence behind retained writer tiers.
 
 ## The principle
@@ -35,13 +35,13 @@ part of a run's configuration: compare runs only within one set of pins.
 | Role | Claude | GPT | Effort policy |
 |---|---|---|---|
 | Orchestrator | Session model | Session model | Preserve the operator's selection; adjudication and operator routing need capable judgment. |
-| Plan drafter / plan fixer | Session model (`inherit`) | `gpt-6.1-sol` (`frontier` default) | Medium for bounded work; high for consequential design (below). |
-| Plan reviewer | Session model (`inherit`) | `plan-reviewer` tier (`gpt-6.1-sol` / medium) | Claude medium for bounded plans, high for consequential design; retain GPT gate configuration. |
+| Plan drafter / plan fixer | Session model (`inherit`) | `gpt-6.2-sol` (`frontier` default) | Medium for bounded work; high for consequential design (below). |
+| Plan reviewer | Session model (`inherit`) | `plan-reviewer` tier (`gpt-6.2-sol` / medium) | Claude medium for bounded plans, high for consequential design; retain GPT gate configuration. |
 | Direction reviewer | Session model (`inherit`) | Host's native role mapping | Medium for bounded synthesis; high for consequential design. |
-| Explore | Built-in `Explore`, session model and effort — in every `HYBRID_MODE` | Codex host only: the host's native agent at `seats['*']` (`gpt-6.1-sol` / medium) | The host's own agent; the brief carries the symbol-tools rule and the plan-conflict tripwire. |
-| Implementer / fixer / mop-up | Opus / high | `writer` tier (`gpt-6.1-sol` / low) | Effort is pinned in frontmatter; preserve commit-verification gates. |
-| Architecture | Opus, session effort (`general-purpose` spawn) | `standard` tier (`gpt-6.1-sol` / high) | Preserve substantive code-review tier; route only when applicable. |
-| Test coverage / cold regression | Role's frontmatter (Opus / medium) | `standard-light` tier (`gpt-6.1-sol` / medium) | Preserve current tiers. |
+| Explore | Built-in `Explore`, session model and effort — in every `HYBRID_MODE` | Codex host only: the host's native agent at `seats['*']` (`gpt-6.2-sol` / medium) | The host's own agent; the brief carries the symbol-tools rule and the plan-conflict tripwire. |
+| Implementer / fixer / mop-up | Opus / high | `writer` tier (`gpt-6.2-sol` / low) | Effort is pinned in frontmatter; preserve commit-verification gates. |
+| Architecture | Opus, session effort (`general-purpose` spawn) | `standard` tier (`gpt-6.2-sol` / high) | Preserve substantive code-review tier; route only when applicable. |
+| Test coverage / cold regression | Role's frontmatter (Opus / medium) | `standard-light` tier (`gpt-6.2-sol` / medium) | Preserve current tiers. |
 | Security / routed domain / holistic | Role's frontmatter at medium (Opus; `copy-lead` Sonnet); holistic is template-only, Opus at session effort | Explicit runtime seat mapping | Preserve capable gates; pure Codex uses GPT, never a hidden Claude dependency. |
 
 Performance is retired as a standalone seat. Its template remains for historical
@@ -75,7 +75,7 @@ for consequential design the runtime selects the matching `-complex` named profi
 `sf-direction-reviewer-complex`). Those profiles use `model: inherit`, `effort: high`,
 and load the base role's instructions without duplicating them. GPT planners and
 direction review select high through their native runtime; the GPT plan-reviewer
-gate remains `gpt-6.1-sol` / medium.
+gate remains `gpt-6.2-sol` / medium.
 Do not claim that prose instructions or a per-call model override change effort.
 When the runtime cannot select the requested effort, report the actual setting
 and use the documented adapter fallback; do not silently lower it.
@@ -113,7 +113,7 @@ fallback for failed Opus work.
 Run `ship-task-1788363503` recorded defects introduced in four of five Luna/xhigh
 fix rounds. Writer seats subsequently moved to Luna/max. That observation does
 not prove effort caused the defects, and it was measured on another model. Codex
-writer seats now run `gpt-6.1-sol` / low (revision 11): watch fix-introduced
+writer seats now run `gpt-6.2-sol` / low (revision 11): watch fix-introduced
 regressions and semantic plan gaps on those seats, and raise their effort before
 changing anything else if either rises against revision-10 runs.
 

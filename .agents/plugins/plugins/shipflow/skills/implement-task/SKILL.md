@@ -54,7 +54,7 @@ sub-stages 3a → 3c → 3f** — including ship-task Stage 0 step 5.5 first (`H
 resolution and, when not `off`, the `review-backend.md` §Preflight codex probe that
 exports `SF_CODEX_HOME`; without it every `sf-codex` call below would run against the
 user's `~/.codex`). At `HYBRID_MODE=codex` 3c's implementer seat is the `sf-codex implement`
-command in `review-backend.md` §Hybrid mode (`gpt-6.1-sol` / low), with `sf-implementer` as the
+command in `review-backend.md` §Hybrid mode (`gpt-6.2-sol` / low), with `sf-implementer` as the
 fallback; 3c's Explore stays the built-in Claude agent in every mode:
 
 - **3a** baseline (`$BASELINE`, `$REVIEW_BASELINE`), status transition (the `tracker` line

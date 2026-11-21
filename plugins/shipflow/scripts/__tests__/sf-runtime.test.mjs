@@ -98,7 +98,7 @@ test('native preflight and accounting run with neither model CLI on PATH', (t) =
   assert.equal(meta.host_version, null);
   assert.equal(meta.cc_version, null);
   for (let i = 0; i < 3; i++) {
-    const row = invoke('sf-log.mjs', ['spawn', '--log', log, 'role=plan-reviewer', 'agent_type=codex-native', 'backend=codex-native', 'model=gpt-6.1-sol', 'phase=plan', 'round=1', 'wall_ms=1000', `agent_id=native-${i}`, `artifact=review-${i}.md`]);
+    const row = invoke('sf-log.mjs', ['spawn', '--log', log, 'role=plan-reviewer', 'agent_type=codex-native', 'backend=codex-native', 'model=gpt-6.2-sol', 'phase=plan', 'round=1', 'wall_ms=1000', `agent_id=native-${i}`, `artifact=review-${i}.md`]);
     assert.equal(row.status, 0, row.stderr);
   }
   const result = invoke('sf-log.mjs', ['check', log, '--compact']);
@@ -128,7 +128,7 @@ test('SOLO_MODEL locks every non-Explore Claude role and refuses GPT seats', () 
   }
   assert.equal(resolveDispatch({ host: 'claude', role: 'implementer', soloModel: 'sonnet' }, {}).model, 'sonnet');
   assert.equal(resolveRuntime({ host: 'claude' }, {}).solo_model, null);
-  assert.throws(() => resolveRuntime({ host: 'claude' }, { SOLO_MODEL: 'gpt-6.1-sol' }), /SOLO_MODEL must be/);
+  assert.throws(() => resolveRuntime({ host: 'claude' }, { SOLO_MODEL: 'gpt-6.2-sol' }), /SOLO_MODEL must be/);
   assert.throws(() => resolveRuntime({ host: 'claude' }, { SOLO_MODEL: 'opus', HYBRID_MODE: 'review' }), /Claude-only/);
   assert.throws(() => resolveRuntime({ host: 'codex' }, { SOLO_MODEL: 'opus' }), /Claude-only/);
 });
@@ -156,11 +156,11 @@ test('HYBRID_MODE=codex keeps explore on the Claude built-in, on the session mod
   assert.equal(dispatch.tier, null);
 });
 
-test('every checked-in Codex tier runs gpt-6.1-sol on the default service tier', () => {
+test('every checked-in Codex tier runs gpt-6.2-sol on the default service tier', () => {
   const tiers = JSON.parse(readFileSync(join(scripts, 'review-tiers.json'), 'utf8'));
   assert.ok(Object.keys(tiers.tiers).length > 0);
   for (const [name, tier] of Object.entries(tiers.tiers)) {
-    assert.equal(tier.model, 'gpt-6.1-sol', name);
+    assert.equal(tier.model, 'gpt-6.2-sol', name);
     assert.equal(tier.service_tier, 'default', name);
   }
   for (const [seat, key] of Object.entries({ ...tiers.seats, ...tiers.templates })) assert.ok(tiers.tiers[key], `${seat} → ${key}`);

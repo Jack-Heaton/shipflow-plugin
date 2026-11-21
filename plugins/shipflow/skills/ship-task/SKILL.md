@@ -305,7 +305,7 @@ waits on — `tracker task edit <id> --status blocked` — never left in `to do`
    **Claude-host hybrid mode:** `HYBRID_MODE` ∈ {`off` (default), `review`, `codex`} —
    `skills/shared/review-backend.md` §Hybrid mode. `review` = the review seats on Codex
    (`SHIP_REVIEW_BACKEND=codex` is its back-compat alias); `codex` = review **plus** the
-   implementer, fixer and mop-up seats on Codex (`gpt-6.1-sol` / low on the `default`
+   implementer, fixer and mop-up seats on Codex (`gpt-6.2-sol` / low on the `default`
    service tier — tier `writer` in `scripts/review-tiers.json`). Explore stays the built-in
    Claude agent in every mode. When not `off`: run that file's §Preflight (`codex --version`, `codex login
    status`, `export SF_CODEX_HOME=$(node "$SF/sf-codex.mjs" home init --run
