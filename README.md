@@ -78,7 +78,7 @@ Stage-by-stage detail, the status lifecycle and checkpoint policy are in
 
 ## Proof
 
-The pull request that the same run opened, abridged and redacted (the product, schema and
+The PR produced by a `/ship-task` run, abridged and redacted (the product, schema and
 infrastructure details are removed; the structure and verdicts are as shipflow wrote them):
 
 <details>
@@ -117,7 +117,7 @@ infrastructure details are removed; the structure and verdicts are as shipflow w
 
 </details>
 
-A `/ship-report` from one real ship-task run (lightly redacted: tracker ID, branch and
+A `/ship-report` from that real ship-task run (lightly redacted: tracker ID, branch and
 seat names genericized; token columns omitted):
 
 ```text
