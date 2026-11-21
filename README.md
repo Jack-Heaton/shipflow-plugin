@@ -78,9 +78,44 @@ Stage-by-stage detail, the status lifecycle and checkpoint policy are in
 
 ## Proof
 
-<!-- TODO(Jack): link one real PR that shipflow opened, e.g.
-**Example run:** [owner/repo#123](https://github.com/owner/repo/pull/123), opened end to end by `/ship-task`.
--->
+The pull request that the same run opened, abridged and redacted (the product, schema and
+infrastructure details are removed; the structure and verdicts are as shipflow wrote them):
+
+<details>
+<summary><b>Example PR body written by <code>/ship-task</code></b></summary>
+
+> **Summary.** A dashboard now reads stored stats instead of recomputing them on every
+> view. Each entity's stats are recomputed once in the background after a change, with a
+> 60 s quiet period so a burst of changes leads to one recompute.
+>
+> **Acceptance criteria**
+>
+> | AC | Result | Evidence |
+> |---|---|---|
+> | 1. A stored row means no expensive reads on view | PASS | `storedStatsLoaders.test.ts` |
+> | 2. Stored, pending, stale and missing states; banner shows freshness | PASS (visual check deferred) | `StillReadingBanner.dom.test.tsx` |
+> | 3. 5 enqueues in the quiet period → 1 recompute; single flight per entity | PASS | `refreshWorker.test.ts`, `run-claim.integration.test.ts` (embedded PostgreSQL) |
+> | 4. No row or an unreadable row → today's output, unchanged | PASS | `storedStatsLoaders.test.ts` (5 cases) |
+> | 5. A failed recompute keeps the last good row | PASS | `refreshWorker.test.ts`, `computeStoredStats.test.ts` |
+> | 6. Tenant isolation | PASS | integration test on embedded PostgreSQL |
+> | 7. Durable pipeline step order unchanged | PASS | `stepOrder.test.ts` |
+> | 8. Live: one upload on dev causes exactly one recompute | DEFERRED_LIVE | Needs the infrastructure deploys listed in the PR |
+>
+> **Verification.** Scoped build and type-check 26/26; lint ratchet 51/51 changed files, no
+> new errors; acceptance suites 104 + 69 + 32 tests. One unit test fails, and it already
+> fails on the base branch at the same lines (shifted by two), so it is reported as
+> pre-existing. Two push-gate checks that also fail on the base were skipped with operator
+> approval, and the PR says so.
+>
+> **Review.** Plan: 4 adversarial rounds plus a failure-over-time seat; the final round had
+> no critical, high or medium findings. Code: security, architecture, failure-over-time,
+> backend, infrastructure, frontend and UX seats; 0 critical / 0 high. Four medium findings
+> were fixed; the regression pass came back clean; one medium finding introduced by a fix
+> was bounded in mop-up. The panel cap left two reviewers unseated (API contract, test
+> coverage), and the PR names them. 14 low findings are listed as residue, none a
+> wrong-data defect.
+
+</details>
 
 A `/ship-report` from one real ship-task run (lightly redacted: tracker ID, branch and
 seat names genericized; token columns omitted):
