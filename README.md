@@ -82,11 +82,48 @@ Stage-by-stage detail, the status lifecycle and checkpoint policy are in
 **Example run:** [owner/repo#123](https://github.com/owner/repo/pull/123), opened end to end by `/ship-task`.
 -->
 
-<!-- TODO(Jack): paste a trimmed /ship-report output from a real run, e.g.
+A `/ship-report` from one real ship-task run (lightly redacted: tracker ID, branch and
+seat names genericized; token columns omitted):
+
 ```text
-(ship-report output here)
+=== ship-report — task <id>  (ship-task-1795037734.jsonl) ===
+mode: inline   branch: feat/dashboard-stored-stats
+plan rounds: 4   fix rounds: 1   wall-clock: 7h21m
+wall segments: seats busy 3h55m (53%)   operator waits 2h58m (40%)   orchestrator 27m (6%)
+idle after a finished seat: 35m50s (8% of wall; largest: 11m32s after explore r1)
+
+--- wall-clock by role (32 spawns) ---
+  role                          spawns     wall  models
+  implementer                        5    2h16m  claude-opus-5-5/high×5
+  explore                            5   50m52s  claude-opus-5-5/high×5
+  plan-drafter (+ fix)               3   40m24s  claude-opus-5-5/high
+  plan-reviewer (+ rereview, FoT)    5   26m54s  claude-opus-5-5/high
+  fixer / mop-up                     3   27m49s  claude-opus-5-5/high×3
+  reviewer:failure-over-time         2   13m26s  claude-opus-5-5/high
+  reviewer:frontend-reviewer         2    9m37s  claude-opus-5-5/medium×2
+  reviewer:backend-reviewer          2    9m16s  claude-opus-5-5/medium×2
+  reviewer:architecture              1    7m57s  claude-opus-5-5/high×1
+  reviewer:ux-consistency-lead       2    5m36s  claude-opus-5-5/medium×2
+  reviewer:security-reviewer         1    4m55s  claude-opus-5-5/medium×1
+  reviewer:infra-reviewer            1    3m50s  claude-opus-5-5/medium×1
+
+--- fix-round yield ---
+  round   fix-now  human  follow  dropped  re-review
+  1             4      0       0        0  warm
+  2             1      0       0        0  none
+  → rounds ≥2 surfaced 1 new fix-now finding. Round 2+ earned its cost.
+
+--- plan gaps (decisions the plan did not specify): semantic 14 / cosmetic 0 ---
+--- warm closure: 6/6 exchanges warm (100%), 0 findings reopened ---
+--- adjudication: 5 semantic gaps: 5 accepted, 1 redirected ---
+--- mop-up: 1 fixed, 13 residue, 0 filed, generation-capped ---
+
+=== tuning signals ===
+  plan took 4 rounds — plan-drafter/reviewer disagreement is expensive.
 ```
--->
+
+The report shows where the run spent its time and what to tune next. Here, the second fix
+round paid for itself, and the four-round plan loop is the next thing to tighten.
 
 In five weeks of daily production use the pipeline was the author's main delivery path:
 321 sessions, 2,600+ sub-agent spawns and 1,000+ commits, with reviewer seats regularly
