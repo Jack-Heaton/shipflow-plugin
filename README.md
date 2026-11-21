@@ -18,7 +18,7 @@ only at the decisions that belong to a human. The human always makes the merge c
 - **Tracks state in GitHub Issues by default, and can move to any PM tool.** Every tracker
   read and write goes through one adapter. It was built and run in production against
   ClickUp; this version runs straight off GitHub. [→ Trackers](#tracker-state-github-by-default-any-pm-platform-by-swapping-one-file)
-- **Tested in daily production use.** It came out of five weeks of heavy daily use: 321
+- **Tested in daily production use for months.** In the past five weeks of heavy daily use: 321
   sessions, 2,600+ sub-agent spawns and 1,000+ commits.
   [→ In practice](#in-practice)
 
