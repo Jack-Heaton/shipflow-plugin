@@ -78,7 +78,7 @@ For a parallel batch, capture one `T0` and emit one event per returned result.
 | `tokens_in`, `tokens_cached`, `tokens_out`, `tokens_reasoning` | Codex seats only. Reviewer and `exec` seats: from `codex exec --json`'s `turn.completed.usage`, summed over every model call the seat made (a retry turn included). App-server writers: the last `thread/tokenUsage/updated.total`, which is cumulative for the thread, so it is read as the seat's total rather than summed. `tokens` = `tokens_in` + `tokens_out` so per-role totals stay comparable with Claude seats; `tokens_cached` is what the warm-closure economics are read from. |
 
 **Codex seats.** On their `spawn` events: `agent_type=codex-exec`, `model=<the literal
-model id, e.g. gpt-6.1-sol>` (not an alias — the id that ran, per seat tier),
+model id, e.g. gpt-6.2-sol>` (not an alias — the id that ran, per seat tier),
 `tier=<seat tier>`, `effort=<reasoning effort>`, `agent_id=<the codex thread_id>`,
 `duration_ms` = the seat's wall time (codex reports no separate duration). Warm
 `closure-exchange` / `clarify` events carry `backend=codex`, `agent_id` and the token

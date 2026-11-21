@@ -10,16 +10,16 @@ never steers the run.
 
 | Seat | Agent | Claude default | Codex / GPT default |
 |---|---|---|---|
-| Plan drafter / plan fixer | `sf-plan-drafter`, `sf-plan-fixer` (+ `-complex` high-effort profiles) | session model, medium (high for consequential design) | `gpt-6.1-sol`, medium/high |
-| Plan reviewer | `sf-plan-reviewer` (+ `-complex`) | session model, medium | `gpt-6.1-sol`, medium |
+| Plan drafter / plan fixer | `sf-plan-drafter`, `sf-plan-fixer` (+ `-complex` high-effort profiles) | session model, medium (high for consequential design) | `gpt-6.2-sol`, medium/high |
+| Plan reviewer | `sf-plan-reviewer` (+ `-complex`) | session model, medium | `gpt-6.2-sol`, medium |
 | Direction reviewer | `sf-direction-reviewer` (+ `-complex`) | session model, medium | host-native |
 | Explore | built-in Explore | session model | host-native |
-| Implementer | `sf-implementer` | Opus, high | `gpt-6.1-sol`, low (`writer` tier) |
-| Fixer / mop-up | `sf-fixer` | Opus, high | `gpt-6.1-sol`, low |
-| Security (always seated) | `security-reviewer` | Opus, medium | `gpt-6.1-sol`, medium |
-| Routed domain reviewers | `database-reviewer`, `backend-reviewer`, `frontend-reviewer`, `infra-reviewer`, `api-contract-reviewer`, `prompt-reviewer`, `ux-consistency-lead` | Opus, medium | `gpt-6.1-sol`, medium |
-| Test coverage / cold regression | `test-coverage-guardian`, regression template | Opus, medium | `gpt-6.1-sol`, medium |
-| Architecture (seam touched) | general-purpose + template | Opus | `gpt-6.1-sol`, high |
+| Implementer | `sf-implementer` | Opus, high | `gpt-6.2-sol`, low (`writer` tier) |
+| Fixer / mop-up | `sf-fixer` | Opus, high | `gpt-6.2-sol`, low |
+| Security (always seated) | `security-reviewer` | Opus, medium | `gpt-6.2-sol`, medium |
+| Routed domain reviewers | `database-reviewer`, `backend-reviewer`, `frontend-reviewer`, `infra-reviewer`, `api-contract-reviewer`, `prompt-reviewer`, `ux-consistency-lead` | Opus, medium | `gpt-6.2-sol`, medium |
+| Test coverage / cold regression | `test-coverage-guardian`, regression template | Opus, medium | `gpt-6.2-sol`, medium |
+| Architecture (seam touched) | general-purpose + template | Opus | `gpt-6.2-sol`, high |
 
 The policy behind the table is in
 [`skills/shared/model-tiering.md`](../plugins/shipflow/skills/shared/model-tiering.md), and the

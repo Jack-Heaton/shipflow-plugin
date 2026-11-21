@@ -667,32 +667,32 @@ test('seat tiers: baselines/TCG run at their tier, routed seats inherit, regress
 
   const arch = rev('reviewer:architecture', 'round1');
   assert.equal(arch.status, 0, arch.stderr);
-  assert.equal(modelOf(arch.argv[0]), 'gpt-6.1-sol');
+  assert.equal(modelOf(arch.argv[0]), 'gpt-6.2-sol');
   assert.equal(effortOf(arch.argv[0]), 'model_reasoning_effort="high"');
-  assert.equal(arch.last.tier, 'standard'); assert.equal(arch.last.model, 'gpt-6.1-sol'); assert.equal(arch.last.effort, 'high');
+  assert.equal(arch.last.tier, 'standard'); assert.equal(arch.last.model, 'gpt-6.2-sol'); assert.equal(arch.last.effort, 'high');
   assert.equal(serviceOf(arch.argv[0]), 'service_tier="default"', 'every checked-in tier pins the default service tier'); assert.equal(arch.last.service_tier, 'default');
 
   const tcg = rev('reviewer:test-coverage-guardian', 'round1', ['--seat', 'test-coverage-guardian']);
   assert.equal(tcg.status, 0, tcg.stderr);
-  assert.equal(modelOf(tcg.argv[0]), 'gpt-6.1-sol');
+  assert.equal(modelOf(tcg.argv[0]), 'gpt-6.2-sol');
   assert.equal(effortOf(tcg.argv[0]), 'model_reasoning_effort="medium"');
   assert.equal(tcg.last.tier, 'standard-light');
 
   const nx = rev('reviewer:frontend-reviewer', 'round1');
   assert.equal(nx.status, 0, nx.stderr);
-  assert.equal(modelOf(nx.argv[0]), 'gpt-6.1-sol', 'frontier pins the gate model');
+  assert.equal(modelOf(nx.argv[0]), 'gpt-6.2-sol', 'frontier pins the gate model');
   assert.equal(effortOf(nx.argv[0]), 'model_reasoning_effort="medium"');
   assert.equal(nx.last.tier, 'frontier');
 
   const reg = rev('reviewer:frontend-reviewer', 'regression');
   assert.equal(reg.status, 0, reg.stderr);
-  assert.equal(modelOf(reg.argv[0]), 'gpt-6.1-sol');
+  assert.equal(modelOf(reg.argv[0]), 'gpt-6.2-sol');
   assert.equal(effortOf(reg.argv[0]), 'model_reasoning_effort="medium"');
   assert.equal(reg.last.tier, 'standard-light', 'template tier beats the seat tier');
 
   const forced = rev('reviewer:architecture', 'round1', ['--tier', 'frontier']);
   assert.equal(forced.status, 0, forced.stderr);
-  assert.equal(modelOf(forced.argv[0]), 'gpt-6.1-sol'); assert.equal(forced.last.tier, 'frontier');
+  assert.equal(modelOf(forced.argv[0]), 'gpt-6.2-sol'); assert.equal(forced.last.tier, 'frontier');
 
   const explicit = rev('reviewer:architecture', 'round1', ['--model', 'gpt-x', '--effort', 'xhigh']);
   assert.equal(explicit.status, 0, explicit.stderr);
@@ -707,12 +707,12 @@ test('seat tiers: baselines/TCG run at their tier, routed seats inherit, regress
 
   const plan = run(fx, ['review', '--role', 'plan-reviewer', '--template', 'plan-r1', '--cwd', fx.repo, '--plan', 'docs/plans/task-x.plan.md', '--requirements', 'docs/plans/task-x.requirements.md', '--artifact', join(fx.art, 'plan-tier'), '--round', '1'], { reply: [{ overall_risk: 'NONE', verdict: 'Proceed as-is', findings: [], clean_dimensions: ['3.1 — Scope'], open_questions: [] }] });
   assert.equal(plan.status, 0, plan.stderr);
-  assert.equal(plan.last.tier, 'frontier'); assert.equal(modelOf(plan.argv[0]), 'gpt-6.1-sol');
+  assert.equal(plan.last.tier, 'frontier'); assert.equal(modelOf(plan.argv[0]), 'gpt-6.2-sol');
 
   // the plan-stage failure-over-time seat: its own seat tier, the plan-r1 rendering, <repo root> filled
   const fot = run(fx, ['review', '--role', 'plan-reviewer:failure-over-time', '--template', 'plan-fot-r1', '--cwd', fx.repo, '--plan', 'docs/plans/task-x.plan.md', '--requirements', 'docs/plans/task-x.requirements.md', '--artifact', join(fx.art, 'plan-review-fot-r1'), '--round', '1'], { reply: [{ overall_risk: 'NONE', verdict: 'Proceed as-is', findings: [], clean_dimensions: ['3.5 — Resources, State and Scale'], open_questions: [] }] });
   assert.equal(fot.status, 0, fot.stderr);
-  assert.equal(fot.last.tier, 'frontier'); assert.equal(modelOf(fot.argv[0]), 'gpt-6.1-sol');
+  assert.equal(fot.last.tier, 'frontier'); assert.equal(modelOf(fot.argv[0]), 'gpt-6.2-sol');
   assert.match(fot.prompts, /FAILURE OVER TIME/);
   assert.match(fot.prompts, /Requirements file: \S*task-x\.requirements\.md/);
   assert.doesNotMatch(fot.prompts, /<repo root>|<absolute path>|plan-review-fot-r1\.md>/, 'placeholders filled, delivery lines cut');
@@ -722,8 +722,8 @@ test('seat tiers: baselines/TCG run at their tier, routed seats inherit, regress
 
   const closure = run(fx, ['review', '--role', 'reviewer:architecture', '--template', 'closure', '--cwd', fx.repo, '--range', 'HEAD~1..HEAD', '--artifact', join(fx.art, 'arch-closure'), '--round', '1', '--resume', arch.last.thread_id, '--findings-table', tableFile(fx)], { reply: [{ closures: [{ id: 'NX-1', verdict: 'CLOSED', file: 'a.ts', line: 1, reason: 'gone' }, { id: 'NX-2', verdict: 'CLOSED', file: 'a.ts', line: 9, reason: 'gone' }], new_fix_introduced: [], answer: '' }] });
   assert.equal(closure.status, 0, closure.stderr);
-  assert.equal(modelOf(closure.argv[0]), 'gpt-6.1-sol', 'a resumed thread re-applies the model it was opened with (sidecar), never the table');
-  assert.equal(closure.last.tier, 'thread'); assert.equal(closure.last.model, 'gpt-6.1-sol');
+  assert.equal(modelOf(closure.argv[0]), 'gpt-6.2-sol', 'a resumed thread re-applies the model it was opened with (sidecar), never the table');
+  assert.equal(closure.last.tier, 'thread'); assert.equal(closure.last.model, 'gpt-6.2-sol');
 
   const custom = join(fx.root, 'tiers.json');
   writeFileSync(custom, JSON.stringify({ tiers: { cheap: { model: 'm-cheap', effort: 'low' } }, seats: { '*': 'cheap' } }));
@@ -739,7 +739,7 @@ test('seat tiers: baselines/TCG run at their tier, routed seats inherit, regress
   const logged = rev('reviewer:performance', 'round1', ['--artifact', join(fx.art, 'perf-ledger')], { env: { RUN_LOG: log, SF_RUN_TASK: 'unit-task' } });
   assert.equal(logged.status, 0, logged.stderr);
   const spawn = readFileSync(log, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).find((e) => e.stage === 'spawn');
-  assert.equal(spawn.model, 'gpt-6.1-sol'); assert.equal(spawn.tier, 'standard'); assert.equal(spawn.effort, 'high');
+  assert.equal(spawn.model, 'gpt-6.2-sol'); assert.equal(spawn.tier, 'standard'); assert.equal(spawn.effort, 'high');
   // 0.28.0: the row names the exact range the seat judged and how many codex launches it took.
   assert.equal(spawn.range, 'HEAD~1..HEAD'); assert.equal(spawn.attempts, 1);
 });
@@ -770,12 +770,12 @@ test('tier hardening: sidecar pins a resumed thread, usage errors never become f
   const arch = rev('reviewer:architecture', 'round1');
   assert.equal(arch.status, 0, arch.stderr);
   const side = JSON.parse(readFileSync(join(fx.root, 'home', 'sf-threads', `${arch.last.thread_id}.json`), 'utf8'));
-  assert.equal(side.model, 'gpt-6.1-sol'); assert.equal(side.tier, 'standard');
+  assert.equal(side.model, 'gpt-6.2-sol'); assert.equal(side.tier, 'standard');
   const closure = run(fx, ['review', '--role', 'reviewer:architecture', '--template', 'closure', '--cwd', fx.repo, '--range', 'HEAD~1..HEAD', '--artifact', join(fx.art, 'arch-c2'), '--round', '2', '--resume', arch.last.thread_id, '--findings-table', tableFile(fx)], { reply: [{ closures: [{ id: 'NX-1', verdict: 'CLOSED', file: 'a.ts', line: 1, reason: 'gone' }, { id: 'NX-2', verdict: 'CLOSED', file: 'a.ts', line: 9, reason: 'gone' }], new_fix_introduced: [], answer: '' }], env: { SF_CODEX_TIERS: '/nonexistent/tiers.json' } });
   assert.equal(closure.status, 0, closure.stderr);
   assert.equal(closure.argv[0][1], 'resume');
-  assert.equal(modelOf(closure.argv[0]), 'gpt-6.1-sol', 'resume re-applies the sidecar model, and never reads the table');
-  assert.equal(closure.last.model, 'gpt-6.1-sol'); assert.equal(closure.last.effort, 'high'); assert.equal(closure.last.tier, 'thread');
+  assert.equal(modelOf(closure.argv[0]), 'gpt-6.2-sol', 'resume re-applies the sidecar model, and never reads the table');
+  assert.equal(closure.last.model, 'gpt-6.2-sol'); assert.equal(closure.last.effort, 'high'); assert.equal(closure.last.tier, 'thread');
   // a thread with no sidecar reports what it is: unknown
   const orphan = run(fx, ['review', '--role', 'reviewer:architecture', '--template', 'closure', '--cwd', fx.repo, '--range', 'HEAD~1..HEAD', '--artifact', join(fx.art, 'orphan-c'), '--round', '2', '--resume', 'thread-orphan', '--findings-table', tableFile(fx)], { reply: [{ closures: [{ id: 'NX-1', verdict: 'CLOSED', file: 'a.ts', line: 1, reason: 'gone' }, { id: 'NX-2', verdict: 'CLOSED', file: 'a.ts', line: 9, reason: 'gone' }], new_fix_introduced: [], answer: '' }] });
   assert.equal(orphan.status, 0, orphan.stderr);
@@ -785,7 +785,7 @@ test('tier hardening: sidecar pins a resumed thread, usage errors never become f
   const missing = rev('reviewer:architecture', 'round1', [], { env: { SF_CODEX_TIERS: '/nonexistent/tiers.json' } });
   assert.equal(missing.status, 1); assert.match(missing.stderr, /\/nonexistent\/tiers\.json/);
   const failed = rev('reviewer:architecture', 'round1', [], { exit: 1, error: 'boom' });
-  assert.equal(failed.status, 2); assert.equal(failed.last.status, 'failed'); assert.equal(failed.last.tier, 'standard'); assert.equal(failed.last.model, 'gpt-6.1-sol');
+  assert.equal(failed.status, 2); assert.equal(failed.last.status, 'failed'); assert.equal(failed.last.tier, 'standard'); assert.equal(failed.last.model, 'gpt-6.2-sol');
   assert.equal(rev('reviewer:architecture', 'round1', ['--effort', 'turbo']).status, 1, 'effort outside the codex enum is a usage error');
 
   // panel: a bad --tier is rejected before fan-out; a good one applies to every seat; a seat with a
@@ -797,14 +797,14 @@ test('tier hardening: sidecar pins a resumed thread, usage errors never become f
   const light = run(fx, ['panel', '--roster', roster, '--tier', 'standard-light', '--template', 'round1', '--cwd', fx.repo, '--range', 'HEAD~1..HEAD', '--artifact-dir', fx.art, '--round', '1', '--no-log'], { reply: [reviewReply()] });
   assert.equal(light.status, 0, light.stderr);
   assert.equal(light.argv.length, 2);
-  for (const a of light.argv) { assert.equal(modelOf(a), 'gpt-6.1-sol'); assert.ok(a.includes('model_reasoning_effort="medium"')); }
+  for (const a of light.argv) { assert.equal(modelOf(a), 'gpt-6.2-sol'); assert.ok(a.includes('model_reasoning_effort="medium"')); }
   const bogus = run(fx, ['panel', '--seats', 'no-such-seat,architecture', '--template', 'round1', '--cwd', fx.repo, '--range', 'HEAD~1..HEAD', '--artifact-dir', fx.art, '--round', '1', '--no-log'], { reply: [reviewReply()] });
   assert.equal(bogus.status, 1, 'usage error in one seat → exit 1, not 2');
   assert.deepEqual(bogus.last.usage_errors, ['reviewer:no-such-seat']); assert.deepEqual(bogus.last.failed, []); assert.equal(bogus.last.delivered, 1);
 
   // dry-run reports the tier it would run
   const dry = rev('reviewer:test-coverage-guardian', 'round1', ['--dry-run']);
-  assert.equal(dry.status, 0, dry.stderr); assert.equal(dry.last.tier, 'standard-light'); assert.equal(dry.last.model, 'gpt-6.1-sol');
+  assert.equal(dry.status, 0, dry.stderr); assert.equal(dry.last.tier, 'standard-light'); assert.equal(dry.last.model, 'gpt-6.2-sol');
 
   // TOML: single quotes read; table-scoped keys never promoted
   const userHome = join(fx.root, 'user-codex-3');
@@ -842,7 +842,7 @@ test('hybrid seats: no Codex explore seat; implement/fix write under yolo, verif
   assert.ok(im.argv[0].includes('--dangerously-bypass-approvals-and-sandbox'), 'yolo by default');
   assert.ok(!im.argv[0].includes('read-only'));
   assert.equal(im.last.write_sandbox, 'yolo'); assert.equal(im.last.role, 'implementer'); assert.equal(im.last.tier, 'writer');
-  assert.equal(modelOf(im.argv[0]), 'gpt-6.1-sol');
+  assert.equal(modelOf(im.argv[0]), 'gpt-6.2-sol');
   assert.ok(im.argv[0].includes('model_reasoning_effort="low"'), 'implementer runs Sol at low');
   assert.ok(im.argv[0].includes('service_tier="default"'), 'implementer runs the default service tier'); assert.equal(im.last.service_tier, 'default');
   assert.equal(im.last.commits, 1); assert.equal(im.last.plan_gaps_semantic, 1); assert.equal(im.last.plan_gaps_cosmetic, 1); assert.equal(im.last.files_changed, 1);
@@ -851,7 +851,7 @@ test('hybrid seats: no Codex explore seat; implement/fix write under yolo, verif
   assert.match(imMd, /## Commits \(1 in the worktree, 1 reported\)/); assert.match(imMd, /\| AC1 \| \*\*PASS\*\*/); assert.match(imMd, /\*\*semantic\*\* — return type unspecified/);
   assert.match(im.prompts, /=== TASKS ===\nStep 1: bump a \[task t1\]\n=== END TASKS ===/); assert.match(im.prompts, /SOLE writer/); assert.match(im.prompts, /explore-auth\.md/);
   const spawn = readFileSync(log, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).find((e) => e.stage === 'spawn');
-  assert.equal(spawn.role, 'implementer'); assert.equal(spawn.phase, 'implement'); assert.equal(spawn.model, 'gpt-6.1-sol'); assert.equal(spawn.tier, 'writer'); assert.equal(spawn.effort, 'low'); assert.equal(spawn.service_tier, 'default');
+  assert.equal(spawn.role, 'implementer'); assert.equal(spawn.phase, 'implement'); assert.equal(spawn.model, 'gpt-6.2-sol'); assert.equal(spawn.tier, 'writer'); assert.equal(spawn.effort, 'low'); assert.equal(spawn.service_tier, 'default');
   assert.equal(spawn.plan_gaps_semantic, 1); assert.equal(spawn.commits, 1);
 
   // a reported sha that is not in baseline..HEAD is a failed seat (report ≠ evidence)
@@ -878,10 +878,10 @@ test('hybrid seats: no Codex explore seat; implement/fix write under yolo, verif
   assert.match(readFileSync(join(fx.art, 'fix-r2.md'), 'utf8'), /# Fix round 2[\s\S]*Declined findings[\s\S]*NX-2/);
   const events = readFileSync(log, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
   assert.equal(events.filter((e) => e.stage === 'spawn' && e.role === 'fixer' && e.phase === 'fix').length, 1);
-  assert.equal(fxr.last.tier, 'writer'); assert.equal(fxr.last.model, 'gpt-6.1-sol'); assert.equal(fxr.last.effort, 'low'); assert.equal(fxr.last.service_tier, 'default');
+  assert.equal(fxr.last.tier, 'writer'); assert.equal(fxr.last.model, 'gpt-6.2-sol'); assert.equal(fxr.last.effort, 'low'); assert.equal(fxr.last.service_tier, 'default');
   assert.ok(fxr.argv[0].includes('service_tier="default"'), 'the fixer runs Sol at low on the default service tier');
   const mop = run(fx, ['fix', '--transport', 'exec', '--role', 'mopup-fixer', '--findings', findings, '--baseline', base, '--round', '3', '--cwd', fx.repo, '--artifact', join(fx.art, 'mopup')], { reply: [fixReply] });
-  assert.equal(mop.status, 0, mop.stderr); assert.equal(mop.last.role, 'mopup-fixer'); assert.equal(mop.last.tier, 'writer'); assert.equal(mop.last.model, 'gpt-6.1-sol'); assert.equal(mop.last.effort, 'low'); assert.equal(mop.last.service_tier, 'default');
+  assert.equal(mop.status, 0, mop.stderr); assert.equal(mop.last.role, 'mopup-fixer'); assert.equal(mop.last.tier, 'writer'); assert.equal(mop.last.model, 'gpt-6.2-sol'); assert.equal(mop.last.effort, 'low'); assert.equal(mop.last.service_tier, 'default');
 });
 
 test('writer hardening: code-like content survives, baseline is validated and frozen, panel/verbs/resume guards, fail line carries git evidence', () => {
@@ -1138,7 +1138,7 @@ test('app-server happy: implement + fix deliver over app-server, usage replaced 
   assert.equal(ts.params.approvalPolicy, 'never');
   const turn = asReqs(im.rpc, 'turn/start')[0];
   assert.equal(turn.params.cwd, fx.repo);
-  assert.equal(turn.params.model, 'gpt-6.1-sol');
+  assert.equal(turn.params.model, 'gpt-6.2-sol');
   assert.equal(turn.params.effort, 'low');
   assert.equal(turn.params.serviceTier, 'default');
   assert.equal(turn.params.sandboxPolicy.type, 'dangerFullAccess');

@@ -2183,7 +2183,7 @@ function cmdHome(positional, flags) {
     const cfgPath = join(home, 'config.toml');
     if (!existsSync(cfgPath)) {
       const userCfg = readFileSafe(join(source, 'config.toml'));
-      const model = flags.model || tomlTopString(userCfg, 'model') || 'gpt-6.1-sol';
+      const model = flags.model || tomlTopString(userCfg, 'model') || 'gpt-6.2-sol';
       const effort = checkEffort(flags.effort, '--effort') || tomlTopString(userCfg, 'model_reasoning_effort') || 'medium';
       // service_tier is a billing/priority setting the user chose for their own sessions; a
       // run home that drops it silently moves every seat to the API default.
