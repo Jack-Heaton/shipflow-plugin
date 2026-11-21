@@ -177,7 +177,10 @@ they produced are in [docs/in-practice.md](docs/in-practice.md).
 **Codex**
 
 ```bash
+git clone https://github.com/Jack-Heaton/shipflow-plugin.git
+cd shipflow-plugin
 codex plugin marketplace add .agents/plugins/marketplace.json
+codex plugin add shipflow@shipflow
 ```
 
 ```bash
