@@ -118,13 +118,13 @@ infrastructure details are removed; the structure and verdicts are as shipflow w
 </details>
 
 A `/ship-report` from that real ship-task run (lightly redacted: tracker ID, branch and
-seat names genericized; token columns omitted):
+seat names genericized).:
 
 ```text
 === ship-report — task <id>  (ship-task-1795037734.jsonl) ===
 mode: inline   branch: feat/dashboard-stored-stats
-plan rounds: 4   fix rounds: 1   wall-clock: 7h21m
-wall segments: seats busy 3h55m (53%)   operator waits 2h58m (40%)   orchestrator 27m (6%)
+plan rounds: 4   fix rounds: 1   wall-clock: 4h22m
+wall segments: seats busy 3h55m (53%)  orchestrator 27m (6%)
 idle after a finished seat: 35m50s (8% of wall; largest: 11m32s after explore r1)
 
 --- wall-clock by role (32 spawns) ---
