@@ -37,8 +37,11 @@ These ideas carry over to any agent pipeline, whether or not you use shipflow.
 - **Bounded acceptance criteria.** Every "never", "all" or "100%" gets a structural `guard:`
   or a named `fixture:` set before planning. Review loops converge instead of chasing
   counterexamples forever.
-- **Effort tiers tuned from measurements.** Every spawn logs model, effort, tokens and
-  wall-clock time. `/ship-report` shows where runs thrashed and which tiers to change.
+- **A pipeline that improves itself from its own logs.** Every spawn logs model, effort,
+  tokens and wall-clock time, and every stage logs its rounds and verdicts. `/ship-report`
+  turns those logs into a post-mortem showing where runs thrashed, where emergent behavior
+  showed up that needs a rule, and which model and effort tiers to change. When a new model
+  ships, you can drop it into a seat, run real issues, and measure whether it earns its place.
 - **A one-file tracker adapter.** Every tracker read and write goes through one CLI with a
   JSON contract. It runs on GitHub Issues out of the box and ran in production on ClickUp.
   Moving to Linear or Jira means re-implementing that one file.
